@@ -1,13 +1,13 @@
-//app = aplication
-const express = requiere("express");
-const routes = requiere("./routes");
+//app = application
+const express = require("express"); //Framework
+const routes = require("./routes"); //Rutas
 
 const app = express(); //Inicializamos la App
 
-app.use(express.json()); //Comunicacion es  JSON
+app.use(express.json()); //Comunicación es JSON
 
 //Mensaje predeterminado
-//http://miaplicacion.com/
+//http://miaplicacion.com
 app.get("/", (req, res) => {
   res.status(200).json({
     ok: true,
@@ -15,6 +15,6 @@ app.get("/", (req, res) => {
   });
 });
 
-//Habilitamos las rutas de todos los modulos (index.js)
+//habilitamos las rutas de todos los mkodulos (index.js)
 app.use("/api", routes);
 module.exports = app;
