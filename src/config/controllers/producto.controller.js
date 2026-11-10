@@ -9,6 +9,8 @@ const campos = 'id, marca, descripcion, precio, stock'
 // All functions receive and send data (gateways)[cite: 1]
 // req (require - request >>>), res (result - <<< result)[cite: 1]
 
+
+//LISTAR
 const listarProducto = async(req, res) =>{
   //Se utiliza try - catch porque existe una probabilidad de error
 
@@ -28,9 +30,28 @@ const listarProducto = async(req, res) =>{
   }
 }
 
+// BUSCAR ¿como funciona?
+// API REST => http://miaplicacion.com/api/productos/1
 const obtenerProducto = async(req, res) =>{
   try{
+    const id = Number(req.params.id)
+    if(id<0){
+      return res.status(400).json({
+        ok:false,
+        message: 'Error interno en nel servidor'
+      })
+    }
 
+    //Si podemos buscar el ID
+    const [registro] = await pool.execute(´'Select *from productos WHERE id = ?', [id])
+    
+   if(registro.length === 0){
+    return res.status(404).json({
+      ok:true,
+      data:registro[0]
+    })
+   }
+  
   }catch(e){
     console.error(e)
     res.status(500).json({
@@ -87,9 +108,6 @@ modulo.exports = {
 
 }
 
-// BUSCAR
-
-//LISTAR
 
 //REGISTRAR
 
