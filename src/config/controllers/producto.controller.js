@@ -43,7 +43,7 @@ const obtenerProducto = async(req, res) =>{
     }
 
     //Si podemos buscar el ID
-    const [registro] = await pool.execute(´'Select *from productos WHERE id = ?', [id])
+    const [registro] = await pool.execute(´'Select *from productos WHERE id = ?', [id]);
     
    if(registro.length === 0){
     return res.status(404).json({
