@@ -20,5 +20,7 @@ const probarConexion = async() => {
   conexion.release() // Desconexión
 }
 
+
+
 // Exportar la conexión
 module.exports = { pool, probarConexion }
