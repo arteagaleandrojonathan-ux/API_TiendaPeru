@@ -1,22 +1,15 @@
 //5 funciones: listar, obtener, crear, actualizar, eliminar
 
 const { pool } = require('../config/database')
-
 const datos = ('razonsocial, contacto, ruc, direccion');
-
 // req (require - solicitar >>>), res (result - <<< resultado)
-
-
 //RESTIRCCIONES 
-
-    const restricciones = async(req, res) =>{
+   const restricciones = ({razonsocial, contacto, ruc, direccion} = {}) =>{
         const errores = []
-
         if(razonsocial.trim() === '') errores.push('La razon social es obligatoria')
         if(contacto.trim() === '') errores.push('El contacto es obligatoria')
         if(ruc === undefined || !/^\d{11}$/.test(String(ruc))) errores.push('Deben ser 11 digitos ')
-        if(direccion.trim() === '') errores.push('La dirección es obligatoria')
-            
+        if(direccion.trim() === '') errores.push('La dirección es obligatoria')  
         return errores
     }
 
@@ -30,7 +23,6 @@ const listarProveedores = async (req, res) =>{
             data:listar,
             message: 'Mis datos'
         })
-        
     }catch(e){
         console.error(e)
         return res.status(500).json({
@@ -46,7 +38,7 @@ const buscarProveedores = async (req,res) =>{
     try{
         const id = Number(req.params.id)
         if(id<=0){
-            return res.status(200).json({
+            return res.status(400).json({
                 ok: false,
                 message: 'El id no esta registrado'
             })
@@ -87,11 +79,10 @@ const crearProveedor = async(req, res) =>{
                 errores
             })
         }
-
         //ahora vamos a crear 
-        const {razonsocial, contacto, ruc, dirreccion} = req.body
-        const crearProveedor = 'INSERT INTO proveedores (razonsocial, contacto, ruc, dirreccion) VALUES (?,?,?,?)'
-        const [registroProveedor] = await pool.execute(crearProveedor, [razonsocial, contacto, ruc, dirreccion])
+        const {razonsocial, contacto, ruc, direccion} = req.body
+        const crearProveedor = 'INSERT INTO proveedores (razonsocial, contacto, ruc, direccion) VALUES (?,?,?,?)'
+        const [registroProveedor] = await pool.execute(crearProveedor, [razonsocial, contacto, ruc, direccion])
         res.status(200).json({
             ok: true,
             id: registroProveedor.insertId,
@@ -111,26 +102,24 @@ const crearProveedor = async(req, res) =>{
 const actualizarProveedor = async (req, res) => {
     try{
         //obtenemos el ID para poder saber quien actualizar 
-        const id = Number(pool.params.id)
+        const id = Number(req.params.id)
 
         if(id<0){
-            return res.status(200).json({
+            return res.status(400).json({
                 ok: false,
                 message: 'El ID no valido '
             })
         }
-
         //VALIDAMOS LOS DATOS 
         const errores = restricciones(req.body)
 
         if(errores.length > 0){
-            return res.status(200).json({
+            return res.status(400).json({
                 ok: false,
                 message: 'Valide los datos',
                 errores
             })
         }
-
         //SI EL ID NO EXITE
         const [existe] = await pool.execute('SELECT *FROM proveedores WHERE id=?', [id])
         
@@ -142,9 +131,9 @@ const actualizarProveedor = async (req, res) => {
         }
 
         //AHORA SI VAMOS A ACTUALIZAR
-        const actualizarProveedor = ('UPDATE proveedores SET razonsocial=?, contacto=?, ruc=?, dirreccion=? WHERE id=?')
-        const {razonsocial, contacto, ruc, dirreccion} = req.body
-        const [actualiza] = await pool.execute(actualizarProveedor, [razonsocial, contacto, ruc, dirreccion, id])
+        const actualizarProveedor = ('UPDATE proveedores SET razonsocial=?, contacto=?, ruc=?, direccion=? WHERE id=?')
+        const {razonsocial, contacto, ruc, direccion} = req.body
+        const [actualiza] = await pool.execute(actualizarProveedor, [razonsocial, contacto, ruc, direccion, id])
         
         res.status(200).json({
             ok: true,
@@ -165,7 +154,7 @@ const actualizarProveedor = async (req, res) => {
 
 const eliminarProveedor = async(req, res) =>{
     try{
-        const id = Number(pool.params.id)
+        const id = Number(req.params.id)
         const [eliminar] = await pool.execute('DELETE FROM proveedores WHERE id=?', [id])
 
         if(eliminar.affectedRows === 0){
@@ -189,9 +178,5 @@ const eliminarProveedor = async(req, res) =>{
 
 //METODOS EXPORTADOS
 module.exports = {
-    listarProveedores,
-    crearProveedor,
-    buscarProveedores,
-    actualizarProveedor,
-    eliminarProveedor
-}
+    listarProveedores, crearProveedor, buscarProveedores, actualizarProveedor,
+     eliminarProveedor}

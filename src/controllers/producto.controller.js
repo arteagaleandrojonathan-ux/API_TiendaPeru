@@ -6,7 +6,7 @@
 //const { otroObjeto } = require('') //SOLO ALGUNAS FUNCIONES
 
 const { pool } = require('../config/database')
-const CAMPOS = ('id, marca, descripcion, precio, stock') //Dato común
+const CAMPOS = ('id, marca, descipcion, precio, stock') //Dato común
 
 //Todas las funciones serán ASÍNCRONAS (tardarán un tiempo en ser resueltas...)
 //milisegundos, segundos (1000 = 1seg)
@@ -14,11 +14,11 @@ const CAMPOS = ('id, marca, descripcion, precio, stock') //Dato común
 // req (require - solicitar >>>), res (result - <<< resultado)
 
 // crear - actualizar
-const validarCampos = ({marca, descripcion, precio, stock} = {}) => {
+const validarCampos = ({marca, descipcion, precio, stock} = {}) => {
   const errores = []
 
   if (marca.trim() === '') errores.push('La marca es obligatoria')
-  if (descripcion.trim() === '') errores.push('La descripción es necesaria')
+  if (descipcion.trim() === '') errores.push('La descripción es necesaria')
   if (precio === undefined || isNaN(precio) || precio < 0) errores.push('Verifique el precio')
   if (stock === undefined || !Number.isInteger(stock) || Number(stock) < 0) errores.push('Error en el stock')
 
@@ -93,9 +93,9 @@ const crearProducto = async(req, res) => {
     }
 
     //procedemos a guardar  los datos
-    const {marca, descripcion, precio, stock} = req.body
-    const consulta = `INSERT INTO productos (marca, descripcion, precio, stock) values (?,?,?,?)`
-    const [registro] = await pool.execute(consulta, [marca, descripcion, precio, stock])
+    const {marca, descipcion, precio, stock} = req.body
+    const consulta = `INSERT INTO productos (marca, descipcion, precio, stock) values (?,?,?,?)`
+    const [registro] = await pool.execute(consulta, [marca, descipcion, precio, stock])
     
     res.status(201).json({
       ok: true,
@@ -113,7 +113,6 @@ const crearProducto = async(req, res) => {
 
 const actualizarProducto = async(req, res) => {
   try{
-
     // Obtener el ID del producto a actualizar (obtener...
     const id = Number(req.params.id)
 
@@ -123,7 +122,6 @@ const actualizarProducto = async(req, res) => {
         message: 'El ID no puede ser negativo'
       })
     }
-
     // Validar los campos (crearProducto)
     const errores = validarCampos(req.body)
     if (errores.length > 0) {
@@ -133,24 +131,20 @@ const actualizarProducto = async(req, res) => {
         errores
       })
     }
-
     //Y SI EL ID NO EXISTE?
     const [existe] = await pool.execute('SELECT id FROM productos WHERE id = ?', [id])
-
     if (existe.length === 0) {
       return res.status(404).json({
         ok: false,
         message: 'El ID no existe'
       })
     }
-
     //Finalmente actualizaremos
-    const consulta = 'UPDATE productos SET marca=?, descripcion=?, precio=?, stock=? WHERE id=?'
-    const {marca, descripcion, precio, stock} = req.body
-    const [resultado] = await pool.execute(consulta, [marca, descripcion, precio, stock, id])  
+    const consulta = 'UPDATE productos SET marca=?, descipcion=?, precio=?, stock=? WHERE id=?'
+    const {marca, descipcion, precio, stock} = req.body
+    const [resultado] = await pool.execute(consulta, [marca, descipcion, precio, stock, id])  
 
-
-    res.status(200).joson({
+    res.status(200).json({
       ok: true,
       filasAfectadas: resultado.affectedRows
 

@@ -37,11 +37,7 @@ const listarClientes = async(req, res) =>{
     }
 
 }
-
-
-
 //obtener o buscar, es lo mismo
-
 const buscarClientes = async(req, res) => {
     try{
         const id = Number(req.params.id);
@@ -51,7 +47,6 @@ const buscarClientes = async(req, res) => {
                 message:'El ID no se encontro'
             })
         }
-        
         const [registroCliente] = await pool.execute(`SELECT * FROM clientes WHERE id = ?`,[id])
         // existe la posibilidad que no encontremos el registro
         if(registroCliente.length === 0){
@@ -60,7 +55,6 @@ const buscarClientes = async(req, res) => {
                 message: 'no existe el cliente'
             })
         }
-
         //si llegamos hasta aqui si existe el registro 
         res.status(200).json({
             ok: true,
@@ -74,9 +68,6 @@ const buscarClientes = async(req, res) => {
         })
     }
 }
-
-
-
 //crear
 const crearClientes = async(req, res) =>{
     try {
@@ -107,14 +98,10 @@ const crearClientes = async(req, res) =>{
     }
 
 }
-
-
 //actualizar
 const actualizarClientes = async (req, res) =>{
-
     try{
         const id = Number(req.params.id)
-
         //  Decimos que el ID no puede ser negativo
         if(id<=0){
             return res.status(400).json({
@@ -122,8 +109,6 @@ const actualizarClientes = async (req, res) =>{
                 message: 'ID no encontrado, no se puede acualizar un ID no encontrado'
             })
         }
-
-
         // si el id no existe 
         const [existe] =  await pool.execute('SELECT *FROM clientes  WHERE id = ? ', [id])
 
@@ -146,7 +131,6 @@ const actualizarClientes = async (req, res) =>{
         }
 
         //por fin actualizamos
-
         const actualizar = ('UPDATE clientes SET nombres=?, apellidos=?,telefono=?, direccion=?, email=? WHERE id=?')
         const {nombres, apellidos, telefono, direccion, email} = req.body
         const [actualiza] = await pool.execute(actualizar,  [nombres, apellidos, telefono, direccion, email,id])
@@ -156,7 +140,6 @@ const actualizarClientes = async (req, res) =>{
             filaactualizada: actualiza.affectedRows,
             message: 'Actualizado correctamente'
         })
-
     }catch(e){
         console.error(e)
         return res.status(500).json({
@@ -164,7 +147,6 @@ const actualizarClientes = async (req, res) =>{
             message: 'Error del servidor'
         })
     }
-
 
 }
 
