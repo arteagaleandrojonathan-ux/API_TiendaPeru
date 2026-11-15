@@ -113,7 +113,7 @@ const crearClientes = async(req, res) =>{
 const actualizarClientes = async (req, res) =>{
 
     try{
-        const id = Number(req.parems.id)
+        const id = Number(req.params.id)
 
         //  Decimos que el ID no puede ser negativo
         if(id<=0){
@@ -149,7 +149,7 @@ const actualizarClientes = async (req, res) =>{
 
         const actualizar = ('UPDATE clientes SET nombres=?, apellidos=?,telefono=?, direccion=?, email=? WHERE id=?')
         const {nombres, apellidos, telefono, direccion, email} = req.body
-        const [actualiza] = await pool.execute(actualizar,  [nombres, apellidos, telefono, direccion, email])
+        const [actualiza] = await pool.execute(actualizar,  [nombres, apellidos, telefono, direccion, email,id])
 
         res.status(200).json({
             ok: true,

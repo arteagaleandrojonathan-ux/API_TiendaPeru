@@ -16,7 +16,7 @@ const router = Router()
 //Esto es por cada routes
 router.use('/productos', productoRoutes)
 router.use('/clientes', clienteRoutes)
-router.use('/proveedores', productoRoutes)
+router.use('/proveedores', proveedorRoutes)
 
 
 

@@ -2,7 +2,7 @@
 
 const { pool } = require('../config/database')
 
-const datos = ('razonsocial, contacto, ruc, dirreccion');
+const datos = ('razonsocial, contacto, ruc, direccion');
 
 // req (require - solicitar >>>), res (result - <<< resultado)
 
@@ -14,7 +14,7 @@ const datos = ('razonsocial, contacto, ruc, dirreccion');
 
         if(razonsocial.trim() === '') errores.push('La razon social es obligatoria')
         if(contacto.trim() === '') errores.push('El contacto es obligatoria')
-        if(ruc === undefined || /^\d{11}$/.test(String(ruc))) errores.push('Deben ser 11 digitos ')
+        if(ruc === undefined || !/^\d{11}$/.test(String(ruc))) errores.push('Deben ser 11 digitos ')
         if(direccion.trim() === '') errores.push('La dirección es obligatoria')
             
         return errores
@@ -44,7 +44,7 @@ const listarProveedores = async (req, res) =>{
 
 const buscarProveedores = async (req,res) =>{
     try{
-        const id = Number(req.parems.id)
+        const id = Number(req.params.id)
         if(id<=0){
             return res.status(200).json({
                 ok: false,
@@ -52,9 +52,9 @@ const buscarProveedores = async (req,res) =>{
             })
         }
 
-        const [registroProveedor] = await pool.execute('SELEC *FROM proveedores WHERE id = ?', [id])
+        const [registroProveedor] = await pool.execute('SELECT *FROM proveedores WHERE id = ?', [id])
 
-        if(registroProveedor === 0){
+        if(registroProveedor.length === 0){
             return res.status(404).json({
                 ok:false,
                 message: 'No existe el proveedor'
@@ -80,7 +80,7 @@ const crearProveedor = async(req, res) =>{
     try{
         //validar los datos 
         const errores = restricciones(req.body)
-        if(errores>0){
+        if(errores.length>0){
             return res.status(400).json({
                 ok: false,
                 message: 'Verifique los datos',
@@ -99,7 +99,7 @@ const crearProveedor = async(req, res) =>{
         })
     }catch(e){
         console.error(e)
-        return status(500).json({
+        return res.status(500).json({
             ok: false,
             message: 'Error del servidor'
         })
@@ -111,7 +111,7 @@ const crearProveedor = async(req, res) =>{
 const actualizarProveedor = async (req, res) => {
     try{
         //obtenemos el ID para poder saber quien actualizar 
-        const id = Number(pool.parems.id)
+        const id = Number(pool.params.id)
 
         if(id<0){
             return res.status(200).json({
@@ -144,7 +144,7 @@ const actualizarProveedor = async (req, res) => {
         //AHORA SI VAMOS A ACTUALIZAR
         const actualizarProveedor = ('UPDATE proveedores SET razonsocial=?, contacto=?, ruc=?, dirreccion=? WHERE id=?')
         const {razonsocial, contacto, ruc, dirreccion} = req.body
-        const [actualiza] = await pool.execute(actualizarProveedor, [razonsocial, contacto, ruc, dirreccion])
+        const [actualiza] = await pool.execute(actualizarProveedor, [razonsocial, contacto, ruc, dirreccion, id])
         
         res.status(200).json({
             ok: true,
@@ -165,7 +165,7 @@ const actualizarProveedor = async (req, res) => {
 
 const eliminarProveedor = async(req, res) =>{
     try{
-        const id = Number(pool.parems.id)
+        const id = Number(pool.params.id)
         const [eliminar] = await pool.execute('DELETE FROM proveedores WHERE id=?', [id])
 
         if(eliminar.affectedRows === 0){
