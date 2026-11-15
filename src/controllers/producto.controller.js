@@ -145,7 +145,7 @@ const actualizarProducto = async(req, res) => {
     }
 
     //Finalmente actualizaremos
-    const consulta = 'UPDATE productos SER marca=?, descripcion=?, precio=?, stock=? WHERE id=?'
+    const consulta = 'UPDATE productos SET marca=?, descripcion=?, precio=?, stock=? WHERE id=?'
     const {marca, descripcion, precio, stock} = req.body
     const [resultado] = await pool.execute(consulta, [marca, descripcion, precio, stock, id])  
 

@@ -17,4 +17,5 @@ app.get("/", (req, res) => {
 
 //habilitamos las rutas de todos los mkodulos (index.js)
 app.use("/api", routes);
+  
 module.exports = app;
