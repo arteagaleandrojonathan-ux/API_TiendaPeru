@@ -65,3 +65,6 @@ DB_CONNECTION_LIMIT=10
 #### Si todo está bien, la consola mostrará: 'Conexion a MySQL exitosa'
 
 #### 5. Pruebas en el navegador (chrome o google): http://localhost:3000/api/productos
+
+###DERCARGAR EL POSMAN
+[descargar]('https://www.postman.com/product/api-client/')

@@ -1,0 +1,155 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <style>
+      * {
+        padding: 0px;
+        margin: 0px;
+        border: 0px;
+        font-family: Arial, Helvetica, sans-serif;
+        font-weight: normal;
+      }
+
+      .contenedor {
+        width: 90%;
+        margin: 0 auto;
+        background-color: rgb(245, 242, 238);
+        padding: 0.1rem;
+        text-align: center;
+      }
+      .tarjeta {
+        padding: 1rem;
+        width: 350px;
+        background-color: rgb(75, 180, 212);
+        display: inline-block;
+        border-radius: 10px;
+        margin-bottom: 0.25rem;
+      }
+      .tarjeta a {
+        text-decoration: none;
+        font-size: 12px;
+      }
+      .tarjeta a:hover {
+        text-decoration: underline;
+      }
+
+      .tarjeta h5 {
+        font-style: italic;
+        margin-bottom: 0.25rem;
+      }
+    </style>
+
+    <select name="selector-carreras" id="selector-carreras">
+      <option value="">Mostrar todas</option>
+      <option value="Ingenieria de software">Ingenieria de software</option>
+      <option value="Diseño Grafico Digital">Diseño Grafico Digital</option>
+      <option value="Administracion Industrial">
+        Administracion Industrial
+      </option>
+    </select>
+
+    <div class="contenedor">
+      <div class="tarjeta">
+        <h4>Arteaga Leandro, Jonathan</h4>
+        <h5>Ingenieria de Software</h5>
+        <a href="tel:998332881">Contactas</a>
+        <a href="mailob:artega@gmail.com">Enviar correro</a>
+      </div>
+    </div>
+
+    <script>
+      /*Imaginemos que los datos para las tarjetsa vienen  de una consulta */
+      /*con esta informacion ¿como las renderizamos?*/
+
+      const alumnos = [
+        {
+          apellidos: "Mansilla Quispe",
+          nombres: "karla Pamela",
+          carrera: "Ingenieria de software",
+          telefono: "123238493",
+          correo: "karla@gmail.com",
+        },
+
+        {
+          apellidos: "Aguilar Menneses",
+          nombres: "Juan Liam",
+          carrera: "Ingenieria de software",
+          telefono: "918231456",
+          correo: "juan@gmail.com",
+        },
+        {
+          apellidos: "Garica Bautista",
+          nombres: "Maria Mercedes",
+          carrera: "Ingenieria de software",
+          telefono: "992647352",
+          correo: "maria@gmail.com",
+        },
+        {
+          apellidos: "Zapata Renieric",
+          nombres: "Cesar Alessandro",
+          carrera: "Ingenieria de software",
+          telefono: "987456321",
+          correo: "cesar@gmail.com",
+        },
+        {
+          apellidos: "Gutierrez Mendoza",
+          nombres: "Luis Samir",
+          carrera: "Administracion Industrial",
+          telefono: "900340232",
+          correo: "luis@gmail.com",
+        },
+        {
+          apellidos: "flor caty",
+          nombres: "Perez Castillo",
+          carrera: "Diseño grafico",
+          telefono: "998887223",
+          correo: "flor@gmail.com",
+        },
+      ];
+
+      const contenedor = document.querySelector(".contenedor");
+      const selector = document.getElementById("selector-carreras");
+
+      //Evento ¿cuando ejecutamos la instruccion?
+      selector.addEventListener("change", function () {
+        RenderizarLasTarjetas(selector.value);
+      });
+
+      //continuemos
+      //Manejo de DOM Documento objeto Model
+
+      function RenderizarLasTarjetas(carrera = "") {
+        let listaFiltrada = [];
+        contenedor.innerHTML = "";
+
+        const sumaring = [];
+
+        if (carrera.trim() === "") {
+          listaFiltrada = alumnos;
+        } else {
+          listaFiltrada = alumnos.filter((a) => a.carrera == carrera);
+        }
+
+        //Paso 1: Recorrer tood el arreglo
+        listaFiltrada.forEach((alumno) => {
+          const nuevaTarjeta = `
+              <div class="tarjeta">
+              <h4>${alumno.apellidos} ${alumno.nombres}</h4>
+              <h5>${alumno.carrera}</h5>
+              <a href="tel:${alumno.telefono}">Contactas</a>
+              <a href="${alumno.correo}">Enviar correro</a>
+            </div>
+            `;
+          contenedor.innerHTML += nuevaTarjeta;
+        });
+      }
+
+      RenderizarLasTarjetas("Ingenieria de software");
+    </script>
+  </body>
+</html>
