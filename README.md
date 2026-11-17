@@ -54,11 +54,11 @@
 PORT=3000
 
 #### Base de datos MySQL
-DB_HOST=localhost
+DB_HOST=
 DB_PORT=3306
-DB_USER=root
+DB_USER=
 DB_PASSWORD=
-DB_NAME=tiendaperu
+DB_NAME=
 DB_CONNECTION_LIMIT=10
 
 #### 4. Ejecutar el servidor: node src/server.js
